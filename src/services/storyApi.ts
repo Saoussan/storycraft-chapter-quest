@@ -22,3 +22,4 @@ export const generateChapter = async (topic: string): Promise<string> => {
     throw error;
   }
 };
+
