@@ -3,14 +3,8 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-// Conditionally import the tagger to avoid errors in local development
-let componentTagger = null;
-try {
-  const taggerModule = require("lovable-tagger");
-  componentTagger = taggerModule.componentTagger;
-} catch (error) {
-  console.warn("lovable-tagger not available, continuing without it");
-}
+// Completely disable tagger in local development to avoid esbuild version issues
+const componentTagger = null;
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
