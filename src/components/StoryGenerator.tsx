@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 import ChapterDisplay from './ChapterDisplay';
-import { mockChapterGeneration } from '../services/mockStoryApi';
+import { generateChapter } from '../services/storyApi';
 
 const StoryGenerator: React.FC = () => {
   const [storyIdea, setStoryIdea] = useState<string>('');
@@ -37,16 +36,11 @@ const StoryGenerator: React.FC = () => {
         // Update progress
         setProgress(((i) / totalChapters) * 100);
         
-        // Generate a new chapter
-        const newChapter = await mockChapterGeneration(storyIdea);
+        // Generate a new chapter using the real API
+        const newChapter = await generateChapter(storyIdea);
         
         // Add the new chapter to our list
         setChapters(prevChapters => [...prevChapters, newChapter]);
-        
-        // Small delay to show progress
-        if (i < totalChapters - 1) {
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
       }
       
       setProgress(100);
