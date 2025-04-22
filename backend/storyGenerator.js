@@ -1,22 +1,32 @@
 
+import fetch from 'node-fetch';
+
+// Replace with the Flask backend URL and port
+const FLASK_API_URL = 'http://localhost:5000/generate-chapter';
+
 const generateStoryChapter = async (topic) => {
-  // For now, we'll use a simple mock implementation
-  // In a real application, this would integrate with an AI service
-  const chapterTemplates = [
-    `في يوم من الأيام، كان هناك قصة عن ${topic}. بدأت المغامرة عندما...`,
-    `استمرت القصة مع ${topic} في رحلة مثيرة حيث...`,
-    `وفي تطور مفاجئ، اكتشف ${topic} أن...`,
-    `مع تصاعد الأحداث، وجد ${topic} نفسه في موقف صعب...`,
-    `وأخيراً، تعلم ${topic} درساً مهماً عن...`
-  ];
+  try {
+    // Send a POST request to the Flask API with the topic
+    const response = await fetch(FLASK_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic })
+    });
 
-  const randomIndex = Math.floor(Math.random() * chapterTemplates.length);
-  const chapter = chapterTemplates[randomIndex];
+    if (!response.ok) {
+      throw new Error(`Flask API error: ${response.status}`);
+    }
 
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-
-  return chapter;
+    const data = await response.json();
+    
+    // Expecting Flask to return { chapter: "..." }
+    return data.chapter;
+  } catch (error) {
+    console.error('Error calling Flask API:', error);
+    // Optionally, return a fallback or propagate the error
+    throw error;
+  }
 };
 
 export { generateStoryChapter };
+
