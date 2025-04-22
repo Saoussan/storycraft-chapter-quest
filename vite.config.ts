@@ -7,7 +7,16 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
-    port: 3000,  // Changed from 8080 to 3000
+    port: 8080, // Set to required port 8080
+    proxy: {
+      // Proxy API endpoint(s) to Flask backend
+      '/generate-chapter': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        // Optionally, you can rewrite the path if needed (not necessary here)
+        // rewrite: (path) => path.replace(/^\/api/, '')
+      },
+    },
   },
   plugins: [
     react(),
