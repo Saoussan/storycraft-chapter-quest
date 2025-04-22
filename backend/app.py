@@ -11,6 +11,8 @@ CORS(app)
 model_path = "backend/Ara"
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForCausalLM.from_pretrained(model_path)
+model = model.to('cuda')
+
 
 # Set pad token if not set
 if tokenizer.pad_token is None:
