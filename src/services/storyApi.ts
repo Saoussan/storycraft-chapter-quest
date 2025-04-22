@@ -1,27 +1,33 @@
 
-import { mockChapterGeneration } from './mockStoryApi';
+const API_URL = 'https://8163-gpu-l4-s-2u4js8n7fvax5-a.asia-southeast1-0.prod.colab.dev';
 
 export const generateChapter = async (topic: string): Promise<string> => {
   try {
-    // Using relative path which will be proxied
-    const response = await fetch('/generate-chapter', {
+    console.log(`[storyApi] calling API`);
+    const response = await fetch(`${API_URL}/generate-chapter`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ topic }),
-      signal: AbortSignal.timeout(5000),
     });
 
+    console.log(`[storyApi] Response status:`, response.status);
+    
     if (!response.ok) {
-      throw new Error('Failed to generate chapter');
+      console.error(`[storyApi] Request failed with status: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`[storyApi] Error response:`, errorText);
+      throw new Error(`Failed to generate chapter: ${response.status} ${errorText}`);
     }
 
     const data = await response.json();
+    console.log(`[storyApi] Response data received successfully:`, data);
     return data.chapter;
   } catch (error) {
-    console.error('Error generating chapter:', error);
-    console.log('Using mock API as fallback...');
-    return mockChapterGeneration(topic);
+    console.error('[storyApi] Error generating chapter:', error);
+    console.error('[storyApi] Error details:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('[storyApi] Error stack:', error instanceof Error ? error.stack : 'No stack available');
+    throw error;
   }
 };
