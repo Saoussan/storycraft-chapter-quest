@@ -5,7 +5,10 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
+#CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, origins=['https://8163-gpu-l4-s-2u4js8n7fvax5-a.asia-southeast1-0.prod.colab.dev'])
+
 
 # Load the model and tokenizer
 model_path = "backend/Ara"
@@ -62,4 +65,5 @@ def generate_chapter():
         return jsonify({'error': 'Failed to generate chapter'}), 500
 
 if __name__ == '__main__':
-    app.run(port=8163)
+    #app.run(port=8163)
+    app.run(host='0.0.0.0', port=8163)

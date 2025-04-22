@@ -1,5 +1,8 @@
 
-const API_URL = 'http://localhost:8163';
+//const API_URL = 'http://localhost:8163';
+//const API_URL = 'http://127.0.0.1:8163';
+const API_URL = 'https://8163-gpu-l4-s-2u4js8n7fvax5-a.asia-southeast1-0.prod.colab.dev';
+
 
 export const generateChapter = async (topic: string): Promise<string> => {
   try {
