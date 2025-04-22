@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { mockChapterGeneration } from '@/services/mockStoryApi';
+import { generateChapter } from '@/services/storyApi';
 import StoryProgress from '@/components/StoryProgress';
 import ChapterDisplay from '@/components/ChapterDisplay';
 
@@ -28,7 +28,8 @@ const Index = () => {
 
     setIsGenerating(true);
     try {
-      const chapter = await mockChapterGeneration(userIdeas);
+      // Call the Flask backend API instead of the mock function
+      const chapter = await generateChapter(userIdeas);
       setGeneratedChapters([...generatedChapters, chapter]);
       setUserIdeas('');
       setCurrentChapter(curr => Math.min(curr + 1, 5));
@@ -100,3 +101,4 @@ const Index = () => {
 };
 
 export default Index;
+
