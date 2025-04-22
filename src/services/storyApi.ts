@@ -1,10 +1,9 @@
 
-const API_URL = 'https://8163-gpu-l4-s-2u4js8n7fvax5-a.asia-southeast1-0.prod.colab.dev';
-
 export const generateChapter = async (topic: string): Promise<string> => {
   try {
-    console.log(`[storyApi] calling API`);
-    const response = await fetch(`${API_URL}/generate-chapter`, {
+    console.log(`[storyApi] calling API via proxy`);
+    // Use the relative path which will be handled by Vite's proxy
+    const response = await fetch('/generate-chapter', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,6 +27,9 @@ export const generateChapter = async (topic: string): Promise<string> => {
     console.error('[storyApi] Error generating chapter:', error);
     console.error('[storyApi] Error details:', error instanceof Error ? error.message : 'Unknown error');
     console.error('[storyApi] Error stack:', error instanceof Error ? error.stack : 'No stack available');
-    throw error;
+    
+    // For now, return a fallback message rather than throwing the error
+    // This helps avoid breaking the UI during development
+    return "Failed to generate chapter. The API server might be unavailable. This is a fallback message.";
   }
 };
