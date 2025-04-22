@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Load the model and tokenizer
-model_path = "./Ara"
+model_path = "backend/Ara"
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForCausalLM.from_pretrained(model_path)
 
