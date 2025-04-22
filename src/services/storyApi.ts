@@ -1,43 +1,32 @@
 
+import { mockChapterGeneration } from './mockStoryApi';
+
 const API_URL = 'http://localhost:8000';
 
 export const generateChapter = async (topic: string): Promise<string> => {
-  console.log(`[storyApi] Starting API request to ${API_URL}/generate-chapter with topic: ${topic}`);
-  
   try {
-    console.log(`[storyApi] Sending POST request to ${API_URL}/generate-chapter`);
-    console.log(`[storyApi] Request body:`, JSON.stringify({ topic }));
-    
+    // Try to connect to the real Flask backend
     const response = await fetch(`${API_URL}/generate-chapter`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ topic }),
+      // Add a timeout to avoid waiting too long for the server
+      signal: AbortSignal.timeout(5000), // 5 second timeout
     });
 
-    console.log(`[storyApi] Response status:`, response.status);
-    
     if (!response.ok) {
-      console.error(`[storyApi] Request failed with status: ${response.status}`);
-      const errorText = await response.text();
-      console.error(`[storyApi] Error response:`, errorText);
-      throw new Error(`Failed to generate chapter: ${response.status} ${errorText}`);
+      throw new Error('Failed to generate chapter');
     }
 
     const data = await response.json();
-    console.log(`[storyApi] Response data received successfully:`, data);
     return data.chapter;
   } catch (error) {
-    console.error('[storyApi] Error generating chapter:', error);
-    console.error('[storyApi] Error details:', error instanceof Error ? error.message : 'Unknown error');
-    console.error('[storyApi] Error stack:', error instanceof Error ? error.stack : 'No stack available');
+    console.error('Error generating chapter:', error);
     
-    // You might want to try a fallback to a mock API here if needed
-    // console.log('[storyApi] Attempting to use mock API as fallback');
-    // import { generateChapter as mockGenerateChapter } from './mockStoryApi';
-    // return mockGenerateChapter(topic);
-    
-    throw error;
+    // Fallback to mock API when real API is unavailable
+    console.log('Using mock API as fallback...');
+    return mockChapterGeneration(topic);
   }
 };
