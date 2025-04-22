@@ -9,9 +9,12 @@ CORS(app)
 
 # Load the model and tokenizer
 model_path = "backend/Ara"
+print("==== LOADING MODEL =====")
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForCausalLM.from_pretrained(model_path)
 model = model.to('cuda')
+print("==== MODEL LOADED =====")
+
 
 
 # Set pad token if not set
@@ -20,6 +23,7 @@ if tokenizer.pad_token is None:
 
 @app.route('/generate-chapter', methods=['POST'])
 def generate_chapter():
+    print("==== GENERATE CHAPTER =====")
     try:
         data = request.json
         topic = data.get('topic')

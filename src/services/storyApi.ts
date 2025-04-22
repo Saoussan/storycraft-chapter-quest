@@ -3,6 +3,7 @@ const API_URL = 'http://localhost:8000';
 
 export const generateChapter = async (topic: string): Promise<string> => {
   try {
+    console.log(`[storyApi] calling API`);
     const response = await fetch(`${API_URL}/generate-chapter`, {
       method: 'POST',
       headers: {
@@ -11,15 +12,28 @@ export const generateChapter = async (topic: string): Promise<string> => {
       body: JSON.stringify({ topic }),
     });
 
+    console.log(`[storyApi] Response status:`, response.status);
+    
     if (!response.ok) {
-      throw new Error('Failed to generate chapter');
+      console.error(`[storyApi] Request failed with status: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`[storyApi] Error response:`, errorText);
+      throw new Error(`Failed to generate chapter: ${response.status} ${errorText}`);
     }
 
     const data = await response.json();
+    console.log(`[storyApi] Response data received successfully:`, data);
     return data.chapter;
   } catch (error) {
-    console.error('Error generating chapter:', error);
+    console.error('[storyApi] Error generating chapter:', error);
+    console.error('[storyApi] Error details:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('[storyApi] Error stack:', error instanceof Error ? error.stack : 'No stack available');
+    
+    // You might want to try a fallback to a mock API here if needed
+    // console.log('[storyApi] Attempting to use mock API as fallback');
+    // import { generateChapter as mockGenerateChapter } from './mockStoryApi';
+    // return mockGenerateChapter(topic);
+    
     throw error;
   }
 };
-

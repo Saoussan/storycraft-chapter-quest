@@ -29,9 +29,12 @@ const Index = () => {
     }
 
     setIsGenerating(true);
+    console.log(`----- ${userIdeas} -----`);
     try {
       //const chapter = await mockChapterGeneration(userIdeas);
       // Call the Flask backend API instead of the mock function
+      // console.log(`----- ${userIdeas} -----`);
+      console.log(`qqqqqqqs`);
       const chapter = await generateChapter(userIdeas);
       setGeneratedChapters([...generatedChapters, chapter]);
       setUserIdeas('');
