@@ -38,8 +38,8 @@ def generate_chapter():
 
         # Tokenize
         encoded_input = tokenizer(prompt, return_tensors="pt", padding=True, truncation=True, max_length=512)
-        input_ids = encoded_input.input_ids
-        attention_mask = encoded_input.attention_mask
+        input_ids = encoded_input.input_ids.to('cuda')
+        attention_mask = encoded_input.attention_mask.to('cuda')
 
         # Generate text
         output_ids = model.generate(
@@ -62,4 +62,4 @@ def generate_chapter():
         return jsonify({'error': 'Failed to generate chapter'}), 500
 
 if __name__ == '__main__':
-    app.run(port=8000)
+    app.run(port=8163)
